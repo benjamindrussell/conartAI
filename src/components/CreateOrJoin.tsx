@@ -12,7 +12,7 @@ const RoomComponent = () => {
   const navigate = useNavigate();
   const createRoom = useMutation(api.room.createRoom);
   const joinRoom = useMutation(api.player.joinRoom);
-  const setPlayerName = usePlayerStore((state) => state.setPlayerName);
+  const setPlayerID = usePlayerStore((state) => state.setPlayerID);
 
   useEffect(() => {
     setCreateRoomCode(generateRoomCode());
@@ -30,8 +30,8 @@ const RoomComponent = () => {
     }
     console.log("Joining room:", joinRoomCode);
 
-    setPlayerName(name);
-    await joinRoom({ code: joinRoomCode, name: name });
+    const playerID = await joinRoom({ code: joinRoomCode, name: name });
+    setPlayerID(playerID);
     navigate(`/game/${joinRoomCode}`);
   };
 
@@ -40,10 +40,13 @@ const RoomComponent = () => {
       console.log("Please enter a name");
       return;
     }
-
-    setPlayerName(name);
-    await createRoom({ code: createRoomCode, prompt: "womp womp" });
-    await joinRoom({ code: createRoomCode, name: name });
+    const playerID = await joinRoom({ code: createRoomCode, name: name });
+    await createRoom({
+      code: createRoomCode,
+      prompt: "womp womp",
+      playerID: playerID,
+    });
+    setPlayerID(playerID);
     navigate(`/game/${createRoomCode}`);
   };
 
