@@ -37,7 +37,7 @@ export const ratePlayers = mutation({
   handler: async (ctx, args) => {
     const player = await ctx.db
       .query("players")
-      .filter((q) => q.eq(q.field("name"), args.playerRated))
+      .filter((q) => q.eq(q.field("_id"), args.playerRated))
       .first();
 
     if (!player) {
@@ -46,13 +46,11 @@ export const ratePlayers = mutation({
     }
 
     // if player already rated, update rating
-    if (
-      player.ratings.find((rating) => rating.playerName === args.playerRated)
-    ) {
+    if (player.ratings.find((rating) => rating.playerName === player.name)) {
       await ctx.db.patch(player._id, {
         ratings: player.ratings.map((rating) =>
           rating.playerName === args.playerRated
-            ? { playerName: args.playerRated, rating: args.rating }
+            ? { playerName: player.name, rating: args.rating }
             : rating,
         ),
       });
