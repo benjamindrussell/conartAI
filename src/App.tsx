@@ -7,9 +7,11 @@ function App() {
   return (
     <div className="flex flex-col items-center">
       <h1 className="text-blue-400">conartAI</h1>
-      {/* <Replicate /> */}
-      <Chat />
-      {/* <CreateOrJoin /> */}
+      <Replicate />
+      <div className="flex">
+        <Chat />
+        <CreateOrJoin />
+      </div>
     </div>
   )
 }

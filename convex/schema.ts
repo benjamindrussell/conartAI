@@ -23,6 +23,6 @@ export default defineSchema({
     _id: v.string(),
     messengerId: v.string(),
     content: v.string(),
-    roomCode: v.string()
+    roomCode: v.string(),
   })
 });
