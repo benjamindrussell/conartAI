@@ -1,23 +1,49 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { generateRoomCode } from "../logic";
+import { generateRoomCode } from "../utils.ts";
+import { useMutation } from "convex/react";
+import { api } from "../../convex/_generated/api";
+import { usePlayerStore } from "../store.ts";
 
 const RoomComponent = () => {
   const [createRoomCode, setCreateRoomCode] = useState("");
   const [joinRoomCode, setJoinRoomCode] = useState("");
+  const [name, setName] = useState("");
   const navigate = useNavigate();
+  const createRoom = useMutation(api.room.createRoom);
+  const joinRoom = useMutation(api.player.joinRoom);
+  const setPlayerName = usePlayerStore((state) => state.setPlayerName);
 
   useEffect(() => {
     setCreateRoomCode(generateRoomCode());
   }, []);
 
-  const handleJoinRoom = (e: React.FormEvent) => {
+  const handleJoinRoom = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!name) {
+      console.log("Please enter a name");
+      return;
+    }
+    if (!joinRoomCode) {
+      console.log("Please enter a room code");
+      return;
+    }
     console.log("Joining room:", joinRoomCode);
+
+    setPlayerName(name);
+    await joinRoom({ code: joinRoomCode, name: name });
+    navigate(`/game/${joinRoomCode}`);
   };
 
-  const handleCreateRoom = () => {
-    console.log("Creating a new room");
+  const handleCreateRoom = async () => {
+    if (!name) {
+      console.log("Please enter a name");
+      return;
+    }
+
+    setPlayerName(name);
+    await createRoom({ code: createRoomCode, prompt: "womp womp" });
+    await joinRoom({ code: createRoomCode, name: name });
     navigate(`/game/${createRoomCode}`);
   };
 
@@ -29,6 +55,14 @@ const RoomComponent = () => {
 
       <form onSubmit={handleJoinRoom} className="mb-6">
         <div className="flex items-center space-x-2">
+          {" "}
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Enter your name"
+            className="flex-grow px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
           <input
             type="text"
             value={joinRoomCode}
