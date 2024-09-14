@@ -38,6 +38,7 @@ export default function Replicate() {
   };
 
   return (
+  
     <div className="flex flex-col max-w-md ml-[2.5vw]">
       <ReactSketchCanvas
         ref={canvasRef}
@@ -47,7 +48,7 @@ export default function Replicate() {
         strokeColor="#ffffff"
         style={{ border: 'none' }}
       />
-      <div className="absolute flex flex-row gap-3 left-[35vw] top-[42vw]">
+      <div className="absolute flex flex-row gap-3 ml-[30vw] top-[42vw]">
         <button onClick={undo}>undo</button>
         <button onClick={reset}>reset</button>
       </div>
