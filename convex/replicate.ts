@@ -4,7 +4,8 @@ import Replicate from "replicate";
 
 export const callReplicate = action({
   args: {
-    prompt: v.string()
+    prompt: v.string(),
+    scribble: v.string()
   },
   handler: async (ctx, args) => {
     // implementation goes here
@@ -18,8 +19,8 @@ export const callReplicate = action({
       {
         input: {
           eta: 0,
-          seed: 20,
-          image: "https://replicate.delivery/pbxt/IYQLHLFDraqCrjDUoiwpM9xBhQM1eQVHbxBiNxcbwctUamzb/user_1.png",
+          seed: Math.floor(Math.random() * 100) + 1,
+          image: args.scribble,
           scale: 9,
           steps: 20,
           prompt: args.prompt,

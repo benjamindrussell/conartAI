@@ -1,22 +1,24 @@
 import { FormEvent, useRef, useState } from 'react';
 import { useAction } from "convex/react";
 import { api } from "../../convex/_generated/api";
-import { ReactSketchCanvas } from 'react-sketch-canvas';
+import { ReactSketchCanvas, ReactSketchCanvasRef } from 'react-sketch-canvas';
 
 export default function Replicate() {
   const callReplicate = useAction(api.replicate.callReplicate);
   const [imageUrl, setImageUrl] = useState('');
   const [prompt, setPrompt] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  // const canvasRef = useRef(null);
+  const canvasRef = useRef<ReactSketchCanvasRef | null>(null);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (!prompt.trim()) return;
+    if (!prompt.trim() || !canvasRef.current) return;
 
     setIsLoading(true);
     try {
-      const result = await callReplicate({ prompt: prompt.trim() });
+      const image = await canvasRef.current.exportImage("png");
+      console.log(image);
+      const result = await callReplicate({ prompt: prompt.trim(), scribble: image });
       setImageUrl(result as unknown as string);
     } catch (error) {
       console.error("Error calling Replicate:", error);
@@ -24,6 +26,16 @@ export default function Replicate() {
       setIsLoading(false);
     }
   }
+
+  const undo = () => {
+    if (!canvasRef.current) return;
+    canvasRef.current.undo();
+  };
+
+  const reset = () => {
+    if (!canvasRef.current) return;
+    canvasRef.current.resetCanvas();
+  };
 
   return (
     <div className="flex flex-col items-center gap-4 p-4 max-w-md mx-auto">
@@ -59,11 +71,14 @@ export default function Replicate() {
         </div>
       )}
       <ReactSketchCanvas
-        width="250px"
-        height="250px"
-        canvasColor="transparent"
-        strokeColor="#a855f7"
+        ref={canvasRef}
+        width="512px"
+        height="512px"
+        canvasColor="#000000"
+        strokeColor="#ffffff"
       />
+      <button onClick={undo}>undo</button>
+      <button onClick={reset}>reset</button>
     </div>
   )
 }
