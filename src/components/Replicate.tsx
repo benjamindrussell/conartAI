@@ -38,28 +38,39 @@ export default function Replicate() {
   };
 
   return (
-    <div className="flex flex-col items-center gap-4 p-4 max-w-md mx-auto">
+    <div className="flex flex-col max-w-md ml-[2.5vw]">
+      <ReactSketchCanvas
+        ref={canvasRef}
+        width="70vw"
+        height="40vw"
+        canvasColor="#191919"
+        strokeColor="#ffffff"
+        style={{ border: 'none' }}
+      />
+      <div className="absolute flex flex-row gap-3 left-[35vw] top-[42vw]">
+        <button onClick={undo}>undo</button>
+        <button onClick={reset}>reset</button>
+      </div>
+      
       <form onSubmit={handleSubmit} className="w-full">
-        <div className="flex flex-col gap-2">
-          <label htmlFor="prompt" className="font-medium text-gray-700">
-            Enter your image prompt:
-          </label>
+      {/* <button
+          type="submit"
+          disabled={isLoading || !prompt.trim()}
+          className="absmt-4 w-full bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+        >
+          {isLoading ? 'Generating...' : 'Generate Image'}
+        </button> */}
+        <div className=" gap-2">
           <input
             type="text"
             id="prompt"
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="A serene landscape with mountains..."
+            className="w-[70vw] h-[4vw] mt-5 py-2 px-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="A astronaught in the mountains... (required)"
           />
         </div>
-        <button
-          type="submit"
-          disabled={isLoading || !prompt.trim()}
-          className="mt-4 w-full px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
-        >
-          {isLoading ? 'Generating...' : 'Generate Image'}
-        </button>
+
       </form>
       {imageUrl && (
         <div className="mt-6 w-full">
@@ -70,15 +81,6 @@ export default function Replicate() {
           />
         </div>
       )}
-      <ReactSketchCanvas
-        ref={canvasRef}
-        width="512px"
-        height="512px"
-        canvasColor="#000000"
-        strokeColor="#ffffff"
-      />
-      <button onClick={undo}>undo</button>
-      <button onClick={reset}>reset</button>
     </div>
   )
 }
