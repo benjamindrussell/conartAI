@@ -1,14 +1,32 @@
 import { useParams } from "react-router-dom";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
+import { usePlayerStore } from "../store.ts";
 
 const GameRoom = () => {
   let { gameCode } = useParams();
-  if (!gameCode) return;
-  const room = useQuery(api.room.getRoom, { code: gameCode });
+  if (!gameCode) return null;
 
+  const room = useQuery(api.room.getRoom, { code: gameCode });
   const players = useQuery(api.player.roomPlayers, { code: gameCode });
   const startGame = useMutation(api.room.startRoomGame);
+  const name = usePlayerStore((state) => state.name);
+  const ratePlayers = useMutation(api.player.ratePlayers);
+  const setRoomState = useMutation(api.room.setRoomState);
+
+  const handleRating = async (playerName: string, rating: number) => {
+    await ratePlayers({
+      code: gameCode,
+      playerName: playerName,
+      playerRated: name,
+      rating: rating,
+    });
+  };
+
+  const startRoom = async () => {
+    await setRoomState({ code: gameCode, state: "started" });
+    await startGame({ code: gameCode });
+  };
 
   return (
     <div className="max-w-md mx-auto mt-10 p-6 bg-gray-100 rounded-lg shadow-lg">
@@ -18,8 +36,11 @@ const GameRoom = () => {
       <h2 className="text-xl font-semibold mb-2 text-center text-black">
         {room?.time}
       </h2>
+      <h2 className="text-xl font-semibold mb-2 text-center text-black">
+        {room?.state}
+      </h2>
       <button
-        onClick={() => startGame({ code: gameCode })}
+        onClick={() => startRoom()}
         className="px-4 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
       >
         Start Game
@@ -30,7 +51,6 @@ const GameRoom = () => {
           {gameCode}
         </p>
       </div>
-
       <div className="bg-white p-4 rounded-lg shadow mb-6">
         <h2 className="text-xl font-semibold mb-4">Players</h2>
         {players?.length === 0 ? (
@@ -40,8 +60,29 @@ const GameRoom = () => {
         ) : (
           <ul className="space-y-2">
             {players?.map((player) => (
-              <li className="bg-indigo-100 text-black p-2 rounded">
-                {player.name}
+              <li
+                key={player._id}
+                className="bg-indigo-100 text-black p-2 rounded flex justify-between items-center"
+              >
+                <span>{player.name}</span>
+                {player.name !== name && room?.state === "rating" && (
+                  <select
+                    onChange={(e) =>
+                      handleRating(player.name, parseInt(e.target.value))
+                    }
+                    className="ml-2 p-1 rounded bg-white"
+                    defaultValue=""
+                  >
+                    <option value="" disabled>
+                      Rate
+                    </option>
+                    {[1, 2, 3, 4, 5].map((rating) => (
+                      <option key={rating} value={rating}>
+                        {rating}
+                      </option>
+                    ))}
+                  </select>
+                )}
               </li>
             ))}
           </ul>

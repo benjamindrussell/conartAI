@@ -13,6 +13,7 @@ export const createRoom = mutation({
       time: 90,
       prompt: args.prompt,
       started: false,
+      state: "waiting",
     });
     return roomId;
   },
@@ -27,6 +28,24 @@ export const getRoom = query({
       .query("rooms")
       .filter((q) => q.eq(q.field("code"), args.code))
       .first();
+  },
+});
+
+export const setRoomState = mutation({
+  args: {
+    code: v.string(),
+    state: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const room = await ctx.db
+      .query("rooms")
+      .filter((q) => q.eq(q.field("code"), args.code))
+      .first();
+    if (!room) {
+      console.log("No room found");
+      return;
+    }
+    await ctx.db.patch(room._id, { state: args.state });
   },
 });
 
@@ -68,6 +87,7 @@ export const recursiveUpdateRoomTime = mutation({
       return;
     }
     if (room.time <= 0) {
+      await ctx.db.patch(room._id, { state: "rating" });
       console.log("Time is over");
       return;
     } else {

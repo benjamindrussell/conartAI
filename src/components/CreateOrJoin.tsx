@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { generateRoomCode } from "../logic";
+import { generateRoomCode } from "../utils.ts";
 import { useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
+import { usePlayerStore } from "../store.ts";
 
 const RoomComponent = () => {
   const [createRoomCode, setCreateRoomCode] = useState("");
@@ -11,6 +12,7 @@ const RoomComponent = () => {
   const navigate = useNavigate();
   const createRoom = useMutation(api.room.createRoom);
   const joinRoom = useMutation(api.player.joinRoom);
+  const setPlayerName = usePlayerStore((state) => state.setPlayerName);
 
   useEffect(() => {
     setCreateRoomCode(generateRoomCode());
@@ -27,6 +29,8 @@ const RoomComponent = () => {
       return;
     }
     console.log("Joining room:", joinRoomCode);
+
+    setPlayerName(name);
     await joinRoom({ code: joinRoomCode, name: name });
     navigate(`/game/${joinRoomCode}`);
   };
@@ -36,6 +40,8 @@ const RoomComponent = () => {
       console.log("Please enter a name");
       return;
     }
+
+    setPlayerName(name);
     await createRoom({ code: createRoomCode, prompt: "womp womp" });
     await joinRoom({ code: createRoomCode, name: name });
     navigate(`/game/${createRoomCode}`);

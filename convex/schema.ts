@@ -8,11 +8,13 @@ export default defineSchema({
     time: v.number(),
     prompt: v.string(),
     started: v.boolean(),
+    state: v.string(),
   }),
   players: defineTable({
     _id: v.string(),
     name: v.string(),
     hasSubmitted: v.boolean(),
     roomCode: v.string(),
+    ratings: v.array(v.object({ playerName: v.string(), rating: v.number() })),
   }),
 });
