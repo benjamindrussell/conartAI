@@ -5,8 +5,14 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      backgroundImage: {
+        'custom-bg': "url('./assets/backgroundImg.png')",
+      },
+      fontFamily: {
+        poppins: ['Poppins', 'sans-serif'],
+      },
   },
   plugins: [],
 }
-
+}
