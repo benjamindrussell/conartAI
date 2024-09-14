@@ -1,3 +1,6 @@
+import { v } from "convex/values";
+import { mutation } from "../convex/_generated/server";
+
 export const generateRoomCode = () => {
   const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   let result = "";

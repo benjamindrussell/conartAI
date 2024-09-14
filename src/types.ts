@@ -11,4 +11,5 @@ export type Room = {
   time: number;
   prompt: string;
   players: Player[];
+  started: boolean;
 };

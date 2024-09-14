@@ -15,6 +15,9 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as crons from "../crons.js";
+import type * as player from "../player.js";
+import type * as room from "../room.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -24,7 +27,11 @@ import type {
  * const myFunctionReference = api.myModule.myFunction;
  * ```
  */
-declare const fullApi: ApiFromModules<{}>;
+declare const fullApi: ApiFromModules<{
+  crons: typeof crons;
+  player: typeof player;
+  room: typeof room;
+}>;
 export declare const api: FilterApi<
   typeof fullApi,
   FunctionReference<any, "public">

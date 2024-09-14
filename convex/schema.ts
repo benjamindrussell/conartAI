@@ -7,11 +7,12 @@ export default defineSchema({
     code: v.string(),
     time: v.number(),
     prompt: v.string(),
+    started: v.boolean(),
   }),
   players: defineTable({
     _id: v.string(),
     name: v.string(),
-    hasSumbitted: v.boolean(),
-    roomId: v.string(),
+    hasSubmitted: v.boolean(),
+    roomCode: v.string(),
   }),
 });
