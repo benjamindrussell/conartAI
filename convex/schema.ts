@@ -17,4 +17,10 @@ export default defineSchema({
     roomCode: v.string(),
     ratings: v.array(v.object({ playerName: v.string(), rating: v.number() })),
   }),
+  messages: defineTable({
+    _id: v.string(),
+    messengerId: v.string(),
+    content: v.string(),
+    roomCode: v.string()
+  })
 });
