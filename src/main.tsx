@@ -25,6 +25,10 @@ const router = createBrowserRouter([
   },
   {path: "/join", 
     element: <JoinRoom />},
+    {
+      path:"/test",
+      element: <App />,
+    }
 ]);
 
 createRoot(document.getElementById("root")!).render(
