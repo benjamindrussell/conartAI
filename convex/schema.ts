@@ -5,11 +5,13 @@ export default defineSchema({
   rooms: defineTable({
     _id: v.string(),
     code: v.string(),
-    time: v.number(),
+    scribbleTime: v.number(),
+    ratingTime: v.number(),
     prompt: v.string(),
-    started: v.boolean(),
     state: v.string(),
+    host: v.string(),
   }),
+
   players: defineTable({
     _id: v.string(),
     name: v.string(),

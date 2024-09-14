@@ -10,7 +10,8 @@ type State = "waiting" | "drawing" | "rating" | "review";
 export type Room = {
   id: string;
   code: string;
-  time: number;
+  scribbleTime: number;
+  ratingTime: number;
   prompt: string;
   players: Player[];
   started: boolean;

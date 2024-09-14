@@ -6,3 +6,5 @@ export const generateRoomCode = () => {
   }
   return result;
 };
+
+// TODO: make sure they are unique

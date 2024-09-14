@@ -10,21 +10,19 @@ const GameRoom = () => {
   const room = useQuery(api.room.getRoom, { code: gameCode });
   const players = useQuery(api.player.roomPlayers, { code: gameCode });
   const startGame = useMutation(api.room.startRoomGame);
-  const name = usePlayerStore((state) => state.name);
+  const playerID = usePlayerStore((state) => state.id);
   const ratePlayers = useMutation(api.player.ratePlayers);
-  const setRoomState = useMutation(api.room.setRoomState);
 
   const handleRating = async (playerName: string, rating: number) => {
     await ratePlayers({
       code: gameCode,
       playerName: playerName,
-      playerRated: name,
+      playerRated: playerID,
       rating: rating,
     });
   };
 
   const startRoom = async () => {
-    await setRoomState({ code: gameCode, state: "started" });
     await startGame({ code: gameCode });
   };
 
@@ -34,17 +32,21 @@ const GameRoom = () => {
         Game Room
       </h1>
       <h2 className="text-xl font-semibold mb-2 text-center text-black">
-        {room?.time}
+        {room?.state === "drawing" || "waiting"
+          ? room?.scribbleTime
+          : room?.ratingTime}
       </h2>
       <h2 className="text-xl font-semibold mb-2 text-center text-black">
         {room?.state}
       </h2>
-      <button
-        onClick={() => startRoom()}
-        className="px-4 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-      >
-        Start Game
-      </button>
+      {room?.host === playerID && room?.state === "waiting" && (
+        <button
+          onClick={() => startRoom()}
+          className="px-4 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+        >
+          Start Game
+        </button>
+      )}
       <div className="bg-white p-4 rounded-lg shadow mb-6">
         <h2 className="text-xl font-semibold mb-2 text-center">Game Code</h2>
         <p className="text-4xl font-bold text-center text-indigo-500">
@@ -65,7 +67,7 @@ const GameRoom = () => {
                 className="bg-indigo-100 text-black p-2 rounded flex justify-between items-center"
               >
                 <span>{player.name}</span>
-                {player.name !== name && room?.state === "rating" && (
+                {player._id !== playerID && room?.state === "rating" && (
                   <select
                     onChange={(e) =>
                       handleRating(player.name, parseInt(e.target.value))
