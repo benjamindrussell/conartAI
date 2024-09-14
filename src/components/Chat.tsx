@@ -6,6 +6,7 @@ import { usePlayerStore } from "../store.ts";
 
 export default function Chat() {
   console.log("chat logged");
+  // TODO: don't hard code this
   const gameCode = "PXYJ";
   const room = useQuery(api.room.getRoom, { code: gameCode });
   const players = useQuery(api.player.roomPlayers, { code: gameCode }) || [];
