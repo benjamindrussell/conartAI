@@ -16,19 +16,18 @@ const router = createBrowserRouter([
     element: <Index />,
   },
   {
-    path: "/game/:gameCode",
+    path: "/gametest/:gameCode",
     element: <GameRoom />,
   },
   {
     path: "/create",
     element: <CreateRoom />,
   },
-  {path: "/join", 
-    element: <JoinRoom />},
-    {
-      path:"/test",
-      element: <App />,
-    }
+  { path: "/join", element: <JoinRoom /> },
+  {
+    path: "/test",
+    element: <App />,
+  },
 ]);
 
 createRoot(document.getElementById("root")!).render(

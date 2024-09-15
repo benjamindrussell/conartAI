@@ -13,14 +13,21 @@ const GameRoom = () => {
   const playerID = usePlayerStore((state) => state.id);
   const ratePlayers = useMutation(api.player.ratePlayers);
 
-  const handleRating = async (playerName: string, rating: number) => {
+  const handleRating = async (playerId: string, rating: number) => {
     await ratePlayers({
       code: gameCode,
-      playerName: playerName,
+      playerId: playerId,
       playerRated: playerID,
       rating: rating,
     });
   };
+
+  const displayTime =
+    room?.state === "started"
+      ? room?.scribbleTime
+      : room?.state === "rating"
+        ? room?.ratingTime
+        : null;
 
   const startRoom = async () => {
     await startGame({ code: gameCode });
@@ -32,9 +39,7 @@ const GameRoom = () => {
         Game Room
       </h1>
       <h2 className="text-xl font-semibold mb-2 text-center text-black">
-        {room?.state === "drawing" || "waiting"
-          ? room?.scribbleTime
-          : room?.ratingTime}
+        {displayTime}
       </h2>
       <h2 className="text-xl font-semibold mb-2 text-center text-black">
         {room?.state}
@@ -70,7 +75,7 @@ const GameRoom = () => {
                 {player._id !== playerID && room?.state === "rating" && (
                   <select
                     onChange={(e) =>
-                      handleRating(player.name, parseInt(e.target.value))
+                      handleRating(player._id, parseInt(e.target.value))
                     }
                     className="ml-2 p-1 rounded bg-white"
                     defaultValue=""
@@ -84,6 +89,13 @@ const GameRoom = () => {
                       </option>
                     ))}
                   </select>
+                )}
+                {room?.state === "review" && (
+                  <h4 className="text-xl font-semibold mb-2 text-center text-black">
+                    {player.ratings
+                      .map((rating) => rating.rating)
+                      .reduce((a, b) => a + b, 0) / player.ratings.length}
+                  </h4>
                 )}
               </li>
             ))}

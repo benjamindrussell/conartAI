@@ -58,7 +58,6 @@ const RoomComponent = () => {
 
       <form onSubmit={handleJoinRoom} className="mb-6">
         <div className="flex items-center space-x-2">
-          {" "}
           <input
             type="text"
             value={name}
