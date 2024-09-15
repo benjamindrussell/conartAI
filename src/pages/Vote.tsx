@@ -11,7 +11,7 @@ type Player = {
   name: string;
   hasSubmitted: boolean;
   roomCode: string;
-  imgUrl: string;
+  imageUrl: string;
   ratings: {
     playerId: string;
     rating: number;
@@ -96,7 +96,7 @@ const Vote: React.FC = () => {
         <div className="flex w-full mt-[5vw]">
           <div className="w-[60vw] bg-[#2b2b2b] h-[40vw] ml-10 rounded-2xl flex items-center justify-center">
             <img
-              src={currentPlayer.imgUrl}
+              src={currentPlayer.imageUrl}
               alt={`Player ${currentPlayer.name}`}
               className="max-w-full max-h-full object-contain"
             />

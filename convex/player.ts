@@ -12,7 +12,7 @@ export const joinRoom = mutation({
       roomCode: args.code,
       hasSubmitted: false,
       ratings: [],
-      imgUrl: "",
+      imageUrl: "",
     });
     return playerId;
   },
@@ -101,7 +101,7 @@ export const submitDrawing = mutation({
 export const updatePlayerImgUrl = mutation({
   args: {
     playerId: v.string(),
-    imgUrl: v.string(),
+    imageUrl: v.string(),
   },
   handler: async (ctx, args) => {
     const player = await ctx.db
@@ -112,9 +112,33 @@ export const updatePlayerImgUrl = mutation({
       console.log("no player found");
       return;
     }
-    await ctx.db.patch(player._id, { imgUrl: args.imgUrl });
+
+    const finalImageUrl = Array.isArray(args.imageUrl) ? args.imageUrl[0] : args.imageUrl;
+    await ctx.db.patch(player._id, { imageUrl: args.imageUrl });
   },
 });
+
+// export const updatePlayerImageUrl = mutation({
+//   args: { 
+//     playerId: v.string(),
+//     imageUrl: v.string(),
+//   },
+//   handler: async (ctx, args) => {
+//     const { playerId, imageUrl } = args;
+
+//     // Fetch the player to ensure they exist
+//     const player = await ctx.db.get();
+//     if (!player) {
+//       throw new Error("Player not found");
+//     }
+
+//     // Update the player's imgUrl
+//     await ctx.db.patch(playerId, { imgUrl: imageUrl });
+
+//     // Optionally, you can return the updated player data
+//     return { success: true, updatedPlayer: await ctx.db.get(playerId) };
+//   },
+// });
 
 export const getPlayer = query({
   args: {

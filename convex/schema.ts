@@ -11,13 +11,12 @@ export default defineSchema({
     state: v.string(),
     host: v.string(),
   }),
-
   players: defineTable({
     _id: v.string(),
     name: v.string(),
     hasSubmitted: v.boolean(),
     roomCode: v.string(),
-    imgUrl: v.string(),
+    imageUrl: v.string(),
     ratings: v.array(v.object({ playerId: v.string(), rating: v.number() })),
   }),
   messages: defineTable({

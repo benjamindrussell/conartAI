@@ -194,7 +194,7 @@ export const checkIfAllImagesMade = query({
 
     // see if all players have a non-empty imgUrl
     const allPlayersHaveImgUrl = players.every(
-      (player) => player.imgUrl !== "",
+      (player) => player.imageUrl !== "",
     );
 
     return allPlayersHaveImgUrl;
