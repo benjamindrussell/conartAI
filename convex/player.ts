@@ -12,6 +12,7 @@ export const joinRoom = mutation({
       roomCode: args.code,
       hasSubmitted: false,
       ratings: [],
+      imgUrl: ""
     });
     return playerId;
   },

@@ -32,7 +32,7 @@ const router = createBrowserRouter([
     element: <App />,
   },
   { path: "/draw/:gameCode", element: <Draw /> },
-  { path: "/vote", element: <Vote /> },
+  { path: "/vote/:gameCode", element: <Vote /> },
 ]);
 
 createRoot(document.getElementById("root")!).render(
