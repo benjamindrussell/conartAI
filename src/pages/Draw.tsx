@@ -64,9 +64,6 @@ const Draw: React.FC = () => {
           >
             Start
           </button>
-          <h1 className="font-poppins font-regular shadow-[inset_0_-2px_4px_rgba(0,0,0,0.6)] bg-teal-600 w-[16vw] text-[14px] h-[3vw] rounded-xl text-black flex items-center justify-center">
-            Game code: {gameCode}
-          </h1>
         </div>
         <div className="flex w-full h-[70vw]">
           <Replicate />
