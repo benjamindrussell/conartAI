@@ -5,9 +5,9 @@ import Replicate from "replicate";
 export const callReplicate = action({
   args: {
     prompt: v.string(),
-    scribble: v.string()
+    scribble: v.string(),
   },
-  handler: async (ctx, args) => {
+  handler: async (_, args) => {
     // implementation goes here
 
     const replicate = new Replicate({
@@ -29,14 +29,16 @@ export const callReplicate = action({
           num_outputs: 1,
           low_threshold: 100,
           high_threshold: 200,
-          negative_prompt: "Longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality",
+          negative_prompt:
+            "Longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality",
           image_resolution: 512,
-          return_reference_image: false
-        }
-      }
+          return_reference_image: false,
+        },
+      },
     );
 
     // optionally return a value
     return output;
   },
 });
+

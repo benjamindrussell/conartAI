@@ -15,8 +15,6 @@ export default function Chat() {
   const uploadMessage = useMutation(api.chat.uploadMessage);
   const messages = useQuery(api.chat.getMessages, { code: gameCode }) || [];
 
-  const playerID = usePlayerStore((state) => state.id);
-  const player = useQuery(api.player.getPlayer, { playerId: playerID });
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {

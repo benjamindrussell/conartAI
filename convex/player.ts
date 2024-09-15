@@ -113,13 +113,12 @@ export const updatePlayerImgUrl = mutation({
       return;
     }
 
-    const finalImageUrl = Array.isArray(args.imageUrl) ? args.imageUrl[0] : args.imageUrl;
     await ctx.db.patch(player._id, { imageUrl: args.imageUrl });
   },
 });
 
 // export const updatePlayerImageUrl = mutation({
-//   args: { 
+//   args: {
 //     playerId: v.string(),
 //     imageUrl: v.string(),
 //   },
