@@ -5,7 +5,7 @@ export type Player = {
   roomId: string;
 };
 
-type State = "waiting" | "drawing" | "rating" | "review";
+type State = "waiting" | "started" | "rating" | "review";
 
 export type Room = {
   id: string;

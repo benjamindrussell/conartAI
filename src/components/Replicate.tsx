@@ -1,7 +1,9 @@
-import { FormEvent, useRef, useState, useEffect } from 'react';
+import React, { FormEvent, useRef, useState } from 'react';
 import { useAction } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { ReactSketchCanvas, ReactSketchCanvasRef } from 'react-sketch-canvas';
+import BackIcon from './icons/BackIcon';
+import CrossIcon from './icons/CrossIcon';
 
 export default function Replicate() {
   const callReplicate = useAction(api.replicate.callReplicate);
@@ -42,7 +44,6 @@ export default function Replicate() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!prompt.trim() || !canvasRef.current) return;
-
     setIsLoading(true);
     try {
       const image = await canvasRef.current.exportImage("png");
@@ -66,34 +67,45 @@ export default function Replicate() {
     canvasRef.current.resetCanvas();
   };
 
+  const handleNewDrawing = () => {
+    setImageUrl('');
+  };
+
   return (
-    <div className="flex flex-col max-w-md md:ml-[2.5vw]">
+  
+    <div className="flex flex-col max-w-md ml-[2.5vw]">
       <ReactSketchCanvas
         ref={canvasRef}
-        width={canvasSize.width}
-        height={canvasSize.height} 
+        width="70vw"
+        height="40vw"
         canvasColor="#191919"
         strokeColor="#ffffff"
         style={{ border: 'none' }}
       />
-      <div className="absolute flex flex-row bottom-[550px] left-[150px] gap-3 md:bottom-[150px] md:left-[33.5vw]">
+      <div className="absolute flex flex-row gap-3 ml-[30vw] top-[42vw]">
         <button onClick={undo}>undo</button>
         <button onClick={reset}>reset</button>
       </div>
-
+      
       <form onSubmit={handleSubmit} className="w-full">
-        <div className="gap-2">
+      {/* <button
+          type="submit"
+          disabled={isLoading || !prompt.trim()}
+          className="absmt-4 w-full bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+        >
+          {isLoading ? 'Generating...' : 'Generate Image'}
+        </button> */}
+        <div className=" gap-2">
           <input
             type="text"
             id="prompt"
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
             className="w-[70vw] h-[4vw] mt-5 py-2 px-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="A astronaut in the mountains... (required)"
+            placeholder="A astronaught in the mountains... (required)"
           />
         </div>
       </form>
-      
       {imageUrl && (
         <div className="mt-6 w-full">
           <img

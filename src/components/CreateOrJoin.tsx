@@ -6,6 +6,7 @@ import { api } from "../../convex/_generated/api";
 import { usePlayerStore } from "../store.ts";
 
 const RoomComponent = () => {
+
   const [createRoomCode, setCreateRoomCode] = useState("");
   const [joinRoomCode, setJoinRoomCode] = useState("");
   const [name, setName] = useState("");
@@ -58,7 +59,6 @@ const RoomComponent = () => {
 
       <form onSubmit={handleJoinRoom} className="mb-6">
         <div className="flex items-center space-x-2">
-          {" "}
           <input
             type="text"
             value={name}
