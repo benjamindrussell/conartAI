@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { useAction, useQuery } from "convex/react";
+import { useAction, useMutation, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { ReactSketchCanvas, ReactSketchCanvasRef } from "react-sketch-canvas";
 import BackIcon from "./icons/BackIcon";
 import CrossIcon from "./icons/CrossIcon";
 import { usePlayerStore } from "../store.ts";
+import { updatePlayerImgUrl } from "../../convex/player.ts";
 
 export default function Replicate() {
   const callReplicate = useAction(api.replicate.callReplicate);
@@ -14,6 +15,7 @@ export default function Replicate() {
   const playerID = usePlayerStore((state) => state.id);
   const canvasRef = useRef<ReactSketchCanvasRef | null>(null);
   const player = useQuery(api.player.getPlayer, { playerId: playerID });
+  const updatePlayerImgUrl = useMutation(api.player.updatePlayerImgUrl);
 
   useEffect(() => {
     const makeImage = async () => {
@@ -25,6 +27,12 @@ export default function Replicate() {
         const result = await callReplicate({
           prompt: prompt.trim(),
           scribble: image,
+        });
+        console.log("result: ", result);
+        const url = (result as unknown as string[])[0]
+        updatePlayerImgUrl({
+          playerId: playerID,
+          imageUrl: url
         });
         setImageUrl(result as unknown as string);
       } catch (error) {

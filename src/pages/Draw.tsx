@@ -20,6 +20,9 @@ const Draw: React.FC = () => {
   });
   const playerID = usePlayerStore((state) => state.id);
   const navigate = useNavigate();
+  const players = useQuery(api.player.roomPlayers, {
+    code: gameCode
+  });
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -44,10 +47,13 @@ const Draw: React.FC = () => {
   };
 
   useEffect(() => {
-    if (room?.state === "rating") {
-      navigate(`/vote/${gameCode}`);
+    if (room?.state === "rating" && players) {
+      const allPlayersHaveImages = players.every(player => player.imageUrl && player.imageUrl !== "");
+      if (allPlayersHaveImages) {
+        navigate(`/vote/${gameCode}`);
+      }
     }
-  }, [room?.state]);
+  }, [room?.state, players, gameCode, navigate]);
 
   return (
     <div className="flex flex-row w-screen h-screen bg-black">

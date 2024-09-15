@@ -5,7 +5,6 @@ import { api } from "../../convex/_generated/api";
 import { usePlayerStore } from "../store.ts";
 
 export default function Chat() {
-  console.log("chat logged");
   // TODO: don't hard code this
   let { gameCode } = useParams();
   if (!gameCode) return null;
