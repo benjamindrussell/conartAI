@@ -1,4 +1,4 @@
-import Chat from '../components/Chat';
+import Chat from "../components/Chat";
 import React from "react";
 import Replicate from "../components/Replicate";
 import Logo from "../components/Logo";
@@ -8,9 +8,8 @@ import { api } from "../../convex/_generated/api";
 import { usePlayerStore } from "../store.ts";
 
 const Draw: React.FC = () => {
-  // let { gameCode } = useParams();
-  // if (!gameCode) return null;
-  const gameCode = "PXYJ";
+  let { gameCode } = useParams();
+  if (!gameCode) return null;
 
   const room = useQuery(api.room.getRoom, { code: gameCode });
   const startGame = useMutation(api.room.startRoomGame);
@@ -76,4 +75,3 @@ const Draw: React.FC = () => {
 };
 
 export default Draw;
-
