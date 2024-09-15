@@ -54,14 +54,14 @@ const Draw: React.FC = () => {
             </div>
             <button
               onClick={finishDrawing}
-              className="font-poppins w-[100px] h-[40px] font-regular shadow-[inset_0_-2px_4px_rgba(0,0,0,0.6)] bg-white w-[8vw] text-[14px] h-[3vw] rounded-xl text-black flex items-center justify-center"
+              className="font-poppins hover:opacity-[60%] w-[100px] h-[40px] font-regular shadow-[inset_0_-2px_4px_rgba(0,0,0,0.6)] bg-white w-[8vw] text-[14px] h-[3vw] rounded-xl text-black flex items-center justify-center"
             >
               Submit
             </button>
 
             <button
               onClick={startRoom}
-              className="font-poppins w-[100px] h-[40px] font-regular shadow-[inset_0_-2px_4px_rgba(0,0,0,0.6)] bg-green-500 w-[8vw] text-[14px] h-[3vw] rounded-xl text-black flex items-center justify-center"
+              className="font-poppins hover:opacity-[60%] w-[100px] h-[40px] font-regular shadow-[inset_0_-2px_4px_rgba(0,0,0,0.6)] bg-green-500 w-[8vw] text-[14px] h-[3vw] rounded-xl text-black flex items-center justify-center"
             >
               Start
             </button>

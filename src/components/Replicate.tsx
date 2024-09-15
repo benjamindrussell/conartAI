@@ -46,7 +46,7 @@ export default function Replicate() {
   };
 
   return (
-    <div className="flex flex-col md:ml-[0]   ml-[13vw] w-[70vw]">
+    <div className="flex flex-col md:ml-[0] ml-[13vw] w-[70vw]">
       <div className="flex flex-col items-center bg-transparent md:bg-[#191919] rounded-xl">
         {imageUrl ? (
           <img
