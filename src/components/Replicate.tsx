@@ -1,7 +1,9 @@
-import { FormEvent, useRef, useState } from 'react';
+import React, { FormEvent, useRef, useState } from 'react';
 import { useAction } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { ReactSketchCanvas, ReactSketchCanvasRef } from 'react-sketch-canvas';
+import BackIcon from './icons/BackIcon';
+import CrossIcon from './icons/CrossIcon';
 
 export default function Replicate() {
   const callReplicate = useAction(api.replicate.callReplicate);
@@ -13,7 +15,6 @@ export default function Replicate() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!prompt.trim() || !canvasRef.current) return;
-
     setIsLoading(true);
     try {
       const image = await canvasRef.current.exportImage("png");
@@ -37,51 +38,64 @@ export default function Replicate() {
     canvasRef.current.resetCanvas();
   };
 
+  const handleNewDrawing = () => {
+    setImageUrl('');
+  };
+
   return (
-  
-    <div className="flex flex-col max-w-md ml-[2.5vw]">
-      <ReactSketchCanvas
-        ref={canvasRef}
-        width="70vw"
-        height="40vw"
-        canvasColor="#191919"
-        strokeColor="#ffffff"
-        style={{ border: 'none' }}
-      />
-      <div className="absolute flex flex-row gap-3 ml-[30vw] top-[42vw]">
-        <button onClick={undo}>undo</button>
-        <button onClick={reset}>reset</button>
+    <div className="flex flex-col w-[70vw]">
+      <div className='flex flex-col items-center bg-[#191919] pt-6 pb-6 rounded-xl'>
+        {imageUrl ? (
+          <img
+            src={imageUrl}
+            alt="Generated image"
+            className="w-[512px] h-[512px] rounded-md shadow-lg object-cover"
+          />
+        ) : (
+          <ReactSketchCanvas
+            ref={canvasRef}
+            width="512px"
+            height="512px"
+            canvasColor="#191919"
+            strokeColor="#ffffff"
+          />
+        )}
+        <div className='flex gap-4 mt-6'>
+          <button onClick={undo} className="bg-teal-600 flex justify-center items-center rounded-full pr-1.5 pb-1.5" disabled={!!imageUrl}>
+            <BackIcon width={40} height={40} />
+          </button>
+          <button onClick={reset} className="bg-teal-600 flex justify-center items-center rounded-full px-[3px]" disabled={!!imageUrl}>
+            <CrossIcon width={40} height={40}/>
+          </button>
+          {imageUrl && (
+            <button
+              onClick={handleNewDrawing}
+              className="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 transition duration-300"
+            >
+              New Drawing
+            </button>
+          )}
+        </div>
       </div>
-      
       <form onSubmit={handleSubmit} className="w-full">
-      {/* <button
+        <button
           type="submit"
           disabled={isLoading || !prompt.trim()}
-          className="absmt-4 w-full bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+          className="w-full mt-5 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300"
         >
           {isLoading ? 'Generating...' : 'Generate Image'}
-        </button> */}
-        <div className=" gap-2">
+        </button>
+        <div className="gap-2">
           <input
             type="text"
             id="prompt"
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
-            className="w-[70vw] h-[4vw] mt-5 py-2 px-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="A astronaught in the mountains... (required)"
+            className="w-full h-[4vw] mt-5 py-2 px-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="An astronaut in the mountains... (required)"
           />
         </div>
-
       </form>
-      {imageUrl && (
-        <div className="mt-6 w-full">
-          <img
-            src={imageUrl}
-            alt="Generated image"
-            className="w-full h-auto rounded-md shadow-lg"
-          />
-        </div>
-      )}
     </div>
-  )
+  );
 }
