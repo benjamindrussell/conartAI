@@ -51,15 +51,17 @@ export default function Chat() {
   };
 
   return (
-    <div className="h-[700px] w-[300px] bg-blue-300 flex flex-col p-4">
-      <h1 className="text-xl font-bold mb-4">Chat</h1>
-      <div className="flex-grow overflow-y-auto mb-4 flex flex-col-reverse">
+    <div className="w-[25vw] bg-[#191919] flex flex-col rounded-xl ">
+      <div className="bg-teal-600 rounded-t-xl pt-4 px-4">
+        <h1 className="text-xl font-bold mb-4">Room Code:</h1>
+      </div>
+      <div className="flex-grow overflow-y-auto mb-4 flex flex-col-reverse mx-4">
         <div ref={messagesEndRef} />
         {messages.slice().reverse().map((msg, index) => (
           <div 
             key={index} 
             className={`mb-2 p-2 rounded-lg ${
-              msg.messengerId === id ? "bg-blue-500 text-white self-end" : "bg-white text-black self-start"
+              msg.messengerId === id ? "bg-teal-600 text-white self-end" : "bg-white text-black self-start"
             }`}
           >
             <p className="text-xs font-bold">{getPlayerName(msg.messengerId)}</p>
@@ -67,7 +69,7 @@ export default function Chat() {
           </div>
         ))}
       </div>
-      <form onSubmit={handleSubmit} className="mt-auto">
+      <form onSubmit={handleSubmit} className="mt-auto mx-4 mb-4">
         <input
           type="text"
           value={message}
@@ -77,7 +79,7 @@ export default function Chat() {
         />
         <button
           type="submit"
-          className="mt-2 w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600"
+          className="mt-2 w-full bg-teal-500 text-white p-2 rounded-md hover:bg-teal-600"
         >
           Send
         </button>
