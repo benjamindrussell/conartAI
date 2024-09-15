@@ -63,7 +63,7 @@ const Podium: React.FC<{ players: Player[] }> = () => {
           {topPlayers.map((player, index) => (
             <div key={player._id} className="flex flex-col items-center">
               <img
-                src={player.imgUrl}
+                src={player.imageUrl}
                 alt={player.name}
                 className={`rounded-t-lg mb-2 object-cover ${getRankClass(index)}`}
               />

@@ -3,7 +3,7 @@ import Logo from '../components/Logo';
 import { useMutation, useQuery } from 'convex/react';
 import { usePlayerStore } from '../store';
 import { api } from '../../convex/_generated/api';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 
 type Player = {
   _id: string & { _tableName: "players" };
@@ -27,6 +27,7 @@ const Vote: React.FC = () => {
   const id = usePlayerStore((state) => state.id);
   const ratePlayers = useMutation(api.player.ratePlayers);
   const setRoomState = useMutation(api.room.setRoomState);
+  const navigate = useNavigate();
 
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState<number>(0);
   const [selectedRating, setSelectedRating] = useState<number>(0);
@@ -76,7 +77,7 @@ const Vote: React.FC = () => {
       console.log("Finishing voting, updating room state");
       const roomStateResult = await setRoomState({ code: gameCode, state: 'results' });
       console.log(`Room state update result:`, roomStateResult);
-      alert("Voting completed successfully!");
+      navigate(`/podium/${gameCode}`)
     } catch (err) {
       console.error("Error updating room state:", err);
       // setError(`Failed to finish voting: ${err.message}`);
