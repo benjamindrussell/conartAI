@@ -51,7 +51,7 @@ export default function Chat() {
   };
 
   return (
-    <div className="w-[25vw] bg-[#191919] flex flex-col rounded-xl ">
+    <div className="md:w-[25vw] w-screen md:ml-[0] md:mt-[0] mt-[310px] h-[50vh] md:h-screen bg-[#191919] flex flex-col rounded-xl">
       <div className="bg-teal-600 rounded-t-xl pt-4 px-4">
         <h1 className="text-xl font-bold mb-4">Room Code:</h1>
       </div>
@@ -79,7 +79,7 @@ export default function Chat() {
         />
         <button
           type="submit"
-          className="mt-2 w-full bg-teal-500 text-white p-2 rounded-md hover:bg-teal-600"
+          className="mt-3 w-full bg-teal-500 text-white p-2 rounded-md hover:bg-teal-600"
         >
           Send
         </button>

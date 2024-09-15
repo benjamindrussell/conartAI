@@ -46,8 +46,8 @@ export default function Replicate() {
   };
 
   return (
-    <div className="flex flex-col w-[70vw]">
-      <div className="flex flex-col items-center bg-[#191919] pt-6 pb-6 rounded-xl">
+    <div className="flex flex-col md:ml-[0]   ml-[13vw] w-[70vw]">
+      <div className="flex flex-col items-center bg-transparent md:bg-[#191919] rounded-xl">
         {imageUrl ? (
           <img
             src={imageUrl}
@@ -63,20 +63,20 @@ export default function Replicate() {
             strokeColor="#ffffff"
           />
         )}
-        <div className="flex gap-4 mt-6">
+        <div className="flex gap-4 mt-6 absolute top-[520px]">
           <button
             onClick={undo}
             className="bg-teal-600 flex justify-center items-center rounded-full pr-1.5 pb-1.5"
             disabled={!!imageUrl}
           >
-            <BackIcon width={40} height={40} />
+            <BackIcon width={30} height={30} />
           </button>
           <button
             onClick={reset}
-            className="bg-teal-600 flex justify-center items-center rounded-full px-[3px]"
+            className=" bg-teal-600 flex justify-center items-center rounded-full px-[3px]"
             disabled={!!imageUrl}
           >
-            <CrossIcon width={40} height={40} />
+            <CrossIcon width={30} height={30} />
           </button>
           {imageUrl && (
             <button
@@ -89,20 +89,13 @@ export default function Replicate() {
         </div>
       </div>
       <form onSubmit={handleSubmit} className="w-full">
-        <button
-          type="submit"
-          disabled={isLoading || !prompt.trim()}
-          className="w-full mt-5 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300"
-        >
-          {isLoading ? "Generating..." : "Generate Image"}
-        </button>
         <div className="gap-2">
           <input
             type="text"
             id="prompt"
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
-            className="w-full h-[4vw] mt-5 py-2 px-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="md:w-full ml-[-8vw] md:ml-[0] w-[90vw] h-[50px] md:h-[4vw] mt-5 py-2 px-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="An astronaut in the mountains... (required)"
           />
         </div>
