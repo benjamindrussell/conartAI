@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import Logo from '../components/Logo';
-import { useMutation, useQuery } from 'convex/react';
-import { usePlayerStore } from '../store';
-import { api } from '../../convex/_generated/api';
-import { useNavigate, useParams } from 'react-router';
+import React, { useState, useEffect } from "react";
+import Logo from "../components/Logo";
+import { useMutation, useQuery } from "convex/react";
+import { usePlayerStore } from "../store";
+import { api } from "../../convex/_generated/api";
+import { useNavigate, useParams } from "react-router";
 
 type Player = {
   _id: string & { _tableName: "players" };
@@ -22,11 +22,15 @@ const Vote: React.FC = () => {
   const { gameCode } = useParams<{ gameCode: string }>();
   if (!gameCode) return null;
 
-  const room = useQuery(api.room.getRoom, { code: gameCode });
-  const players = useQuery(api.player.roomPlayers, { code: gameCode }) as Player[] | undefined;
+  const players = useQuery(api.player.roomPlayers, { code: gameCode }) as
+    | Player[]
+    | undefined;
   const id = usePlayerStore((state) => state.id);
   const ratePlayers = useMutation(api.player.ratePlayers);
   const setRoomState = useMutation(api.room.setRoomState);
+  const checkIfAllPlayersVoted = useQuery(api.room.checkIfAllPlayersVoted, {
+    code: gameCode,
+  });
   const navigate = useNavigate();
 
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState<number>(0);
@@ -40,6 +44,12 @@ const Vote: React.FC = () => {
     }
   }, [currentPlayerIndex, players]);
 
+  useEffect(() => {
+    if (checkIfAllPlayersVoted) {
+      navigate(`/podium/${gameCode}`);
+    }
+  }, [checkIfAllPlayersVoted]);
+
   const handleRatingClick = async (rating: number): Promise<void> => {
     if (!players || !gameCode) return;
 
@@ -49,8 +59,10 @@ const Vote: React.FC = () => {
 
     try {
       const currentPlayer = players[currentPlayerIndex];
-      console.log("current player: ",  currentPlayer)
-      console.log(`Submitting rating for player ${currentPlayer._id}: ${rating}`);
+      console.log("current player: ", currentPlayer);
+      console.log(
+        `Submitting rating for player ${currentPlayer._id}: ${rating}`,
+      );
       const result = await ratePlayers({
         code: gameCode,
         playerId: currentPlayer._id, // ID of the player giving the rating
@@ -75,16 +87,19 @@ const Vote: React.FC = () => {
 
     try {
       console.log("Finishing voting, updating room state");
-      const roomStateResult = await setRoomState({ code: gameCode, state: 'results' });
+      const roomStateResult = await setRoomState({
+        code: gameCode,
+        state: "results",
+      });
       console.log(`Room state update result:`, roomStateResult);
-      navigate(`/podium/${gameCode}`)
     } catch (err) {
       console.error("Error updating room state:", err);
       // setError(`Failed to finish voting: ${err.message}`);
     }
   };
 
-  if (!gameCode || !players || currentPlayerIndex >= players.length) return null;
+  if (!gameCode || !players || currentPlayerIndex >= players.length)
+    return null;
 
   const currentPlayer = players[currentPlayerIndex];
 
@@ -109,7 +124,9 @@ const Vote: React.FC = () => {
               <li
                 key={rating}
                 className={`w-[50px] h-[50px] flex justify-center items-center rounded-full ${
-                  selectedRating === rating ? 'bg-white text-black' : 'bg-[#5C5C5C]'
+                  selectedRating === rating
+                    ? "bg-white text-black"
+                    : "bg-[#5C5C5C]"
                 } hover:bg-white hover:cursor-pointer hover:text-black`}
                 onClick={() => handleRatingClick(rating)}
               >
@@ -121,7 +138,9 @@ const Vote: React.FC = () => {
             Rating player {currentPlayerIndex + 1} of {players.length}
           </p>
           {error && <p className="text-red-500 mt-2">{error}</p>}
-          {isSubmitting && <p className="text-yellow-500 mt-2">Submitting rating...</p>}
+          {isSubmitting && (
+            <p className="text-yellow-500 mt-2">Submitting rating...</p>
+          )}
         </div>
       </div>
     </div>
@@ -129,3 +148,4 @@ const Vote: React.FC = () => {
 };
 
 export default Vote;
+

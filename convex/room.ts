@@ -200,3 +200,21 @@ export const checkIfAllImagesMade = query({
     return allPlayersHaveImgUrl;
   },
 });
+
+export const checkIfAllPlayersVoted = query({
+  args: {
+    code: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const players = await ctx.db
+      .query("players")
+      .filter((q) => q.eq(q.field("roomCode"), args.code))
+      .collect();
+
+    const allPlayersHaveVoted = players.every(
+      (player) => player.ratings.length === players.length,
+    );
+
+    return allPlayersHaveVoted;
+  },
+});
