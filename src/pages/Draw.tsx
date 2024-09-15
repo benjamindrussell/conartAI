@@ -14,6 +14,7 @@ const Draw: React.FC = () => {
   const room = useQuery(api.room.getRoom, { code: gameCode });
   const startGame = useMutation(api.room.startRoomGame);
   const submitDrawing = useMutation(api.player.submitDrawing);
+  const checkIfAllSubmitted = useMutation(api.room.checkIfAllSubmitted);
   const playerID = usePlayerStore((state) => state.id);
 
   const formatTime = (seconds: number) => {
@@ -35,6 +36,7 @@ const Draw: React.FC = () => {
 
   const finishDrawing = async () => {
     await submitDrawing({ playerId: playerID });
+    await checkIfAllSubmitted({ code: gameCode });
   };
 
   return (
