@@ -19,12 +19,14 @@ const Draw: React.FC = () => {
   const players = useQuery(api.player.roomPlayers, {
     code: gameCode,
   });
+
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
   };
   const displayTime = room?.state === "started" ? room?.scribbleTime : 0;
+
   const startRoom = async () => {
     await startGame({ code: gameCode });
   };
@@ -32,6 +34,7 @@ const Draw: React.FC = () => {
     await submitDrawing({ playerId: playerID, code: gameCode });
     await checkIfAllSubmitted({ code: gameCode });
   };
+
   useEffect(() => {
     if (room?.state === "rating" && players) {
       const allPlayersHaveImages = players.every(
@@ -42,6 +45,12 @@ const Draw: React.FC = () => {
       }
     }
   }, [room?.state, players, gameCode, navigate]);
+
+  useEffect(() => {
+    if (room?.scribbleTime === 0) {
+      navigate(`/vote/${gameCode}`);
+    }
+  }, [room?.scribbleTime]);
 
   return (
     <div className="flex flex-col md:flex-row w-screen h-screen bg-black">

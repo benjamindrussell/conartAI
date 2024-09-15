@@ -117,28 +117,6 @@ export const updatePlayerImgUrl = mutation({
   },
 });
 
-// export const updatePlayerImageUrl = mutation({
-//   args: {
-//     playerId: v.string(),
-//     imageUrl: v.string(),
-//   },
-//   handler: async (ctx, args) => {
-//     const { playerId, imageUrl } = args;
-
-//     // Fetch the player to ensure they exist
-//     const player = await ctx.db.get();
-//     if (!player) {
-//       throw new Error("Player not found");
-//     }
-
-//     // Update the player's imgUrl
-//     await ctx.db.patch(playerId, { imgUrl: imageUrl });
-
-//     // Optionally, you can return the updated player data
-//     return { success: true, updatedPlayer: await ctx.db.get(playerId) };
-//   },
-// });
-
 export const getPlayer = query({
   args: {
     playerId: v.string(),
