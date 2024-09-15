@@ -27,7 +27,7 @@ const JoinRoom: React.FC = () => {
 
     const playerID = await joinRoom({ code: joinRoomCode, name: name });
     setPlayerID(playerID);
-    navigate(`/game/${joinRoomCode}`);
+    navigate(`/draw/${joinRoomCode}`);
   };
 
   return (
@@ -70,4 +70,3 @@ const JoinRoom: React.FC = () => {
 };
 
 export default JoinRoom;
-

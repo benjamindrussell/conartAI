@@ -32,7 +32,7 @@ const CreateRoom: React.FC = () => {
       playerID: playerID,
     });
     setPlayerID(playerID);
-    navigate(`/game/${createRoomCode}`);
+    navigate(`/draw/${createRoomCode}`);
   };
 
   return (
@@ -64,4 +64,3 @@ const CreateRoom: React.FC = () => {
 };
 
 export default CreateRoom;
-

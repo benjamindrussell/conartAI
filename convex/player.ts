@@ -66,3 +66,20 @@ export const ratePlayers = mutation({
     });
   },
 });
+
+export const submitDrawing = mutation({
+  args: {
+    playerId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const player = await ctx.db
+      .query("players")
+      .filter((q) => q.eq(q.field("_id"), args.playerId))
+      .first();
+    if (!player) {
+      console.log("no player found");
+      return;
+    }
+    await ctx.db.patch(player._id, { hasSubmitted: true });
+  },
+});

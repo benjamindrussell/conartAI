@@ -1,26 +1,82 @@
-import React from 'react';
-import Replicate from '../components/Replicate';
-import Logo from '../components/Logo';
+import React from "react";
+import Replicate from "../components/Replicate";
+import Logo from "../components/Logo";
+import { useParams } from "react-router";
+import { useMutation, useQuery } from "convex/react";
+import { api } from "../../convex/_generated/api";
+import { usePlayerStore } from "../store.ts";
+
 const Draw: React.FC = () => {
-    return(
-        <div className='flex flex-row w-screen h-screen bg-black'>
-            <div className='flex bg-black flex-col w-[75%]'>
-                <div className='flex w-full gap-5 py-5'>
-                    <Logo></Logo>
-                    <div className='w-[9vw] ml-[7vw] shadow-[inset_0_-2px_4px_rgba(0,0,0,0.6)] bg-[#191919] h-[3vw] rounded-xl'></div>
-                    {/* Timer Goes ^ */}
-                    <div className='font-poppins font-regular shadow-[inset_0_-2px_4px_rgba(0,0,0,0.6)] bg-white w-[8vw] text-[14px] h-[3vw] rounded-xl text-black flex items-center justify-center'>Submit</div>
-                </div>
-                <div className='flex w-full h-[70vw]'>
-                    <Replicate></Replicate>
-                </div>
+  let { gameCode } = useParams();
+  if (!gameCode) return null;
+
+  const room = useQuery(api.room.getRoom, { code: gameCode });
+  const startGame = useMutation(api.room.startRoomGame);
+  const submitDrawing = useMutation(api.player.submitDrawing);
+  const playerID = usePlayerStore((state) => state.id);
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+  };
+
+  const displayTime =
+    room?.state === "started"
+      ? room?.scribbleTime
+      : room?.state === "rating"
+        ? room?.ratingTime
+        : 0;
+
+  const startRoom = async () => {
+    await startGame({ code: gameCode });
+  };
+
+  const finishDrawing = async () => {
+    await submitDrawing({ playerId: playerID });
+  };
+
+  return (
+    <div className="flex flex-row w-screen h-screen bg-black">
+      <div className="flex bg-black flex-col w-[75%]">
+        <div className="flex w-full gap-5 py-5">
+          <Logo></Logo>
+          <div className="w-[9vw] ml-[7vw] shadow-[inset_0_-2px_4px_rgba(0,0,0,0.6)] bg-[#191919] h-[3vw] rounded-xl">
+            <div className="flex items-center justify-center ">
+              <h1 className="text-xl font-bold text-center font-mono text-white mt-1">
+                {formatTime(displayTime)}
+              </h1>
             </div>
-                <div className=''>
-                    <div></div>
-                </div>
-            <div className='flex flex-col'></div>
+          </div>
+
+          <button
+            onClick={finishDrawing}
+            className="font-poppins font-regular shadow-[inset_0_-2px_4px_rgba(0,0,0,0.6)] bg-white w-[8vw] text-[14px] h-[3vw] rounded-xl text-black flex items-center justify-center"
+          >
+            Submit
+          </button>
+
+          <button
+            onClick={startRoom}
+            className="font-poppins font-regular shadow-[inset_0_-2px_4px_rgba(0,0,0,0.6)] bg-green-500 w-[8vw] text-[14px] h-[3vw] rounded-xl text-black flex items-center justify-center"
+          >
+            Start
+          </button>
+          <h1 className="font-poppins font-regular shadow-[inset_0_-2px_4px_rgba(0,0,0,0.6)] bg-teal-600 w-[16vw] text-[14px] h-[3vw] rounded-xl text-black flex items-center justify-center">
+            Game code: {gameCode}
+          </h1>
         </div>
-    );
-}
+        <div className="flex w-full h-[70vw]">
+          <Replicate />
+        </div>
+      </div>
+      <div className="">
+        <div></div>
+      </div>
+      <div className="flex flex-col"></div>
+    </div>
+  );
+};
 
 export default Draw;
+
