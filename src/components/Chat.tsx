@@ -7,7 +7,9 @@ import { usePlayerStore } from "../store.ts";
 export default function Chat() {
   console.log("chat logged");
   // TODO: don't hard code this
-  const gameCode = "PXYJ";
+  let { gameCode } = useParams();
+  if (!gameCode) return null;
+
   const room = useQuery(api.room.getRoom, { code: gameCode });
   const players = useQuery(api.player.roomPlayers, { code: gameCode }) || [];
   const id = usePlayerStore((state) => state.id);
@@ -53,7 +55,7 @@ export default function Chat() {
   return (
     <div className="w-[25vw] bg-[#191919] flex flex-col rounded-xl ">
       <div className="bg-teal-600 rounded-t-xl pt-4 px-4">
-        <h1 className="text-xl font-bold mb-4">Room Code:</h1>
+        <h1 className="text-xl font-bold mb-4">Room Code: {gameCode}</h1>
       </div>
       <div className="flex-grow overflow-y-auto mb-4 flex flex-col-reverse mx-4">
         <div ref={messagesEndRef} />
