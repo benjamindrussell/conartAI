@@ -1,8 +1,8 @@
 import Chat from "../components/Chat";
-import React from "react";
+import React, { useEffect } from "react";
 import Replicate from "../components/Replicate";
 import Logo from "../components/Logo";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { usePlayerStore } from "../store.ts";
@@ -15,7 +15,11 @@ const Draw: React.FC = () => {
   const startGame = useMutation(api.room.startRoomGame);
   const submitDrawing = useMutation(api.player.submitDrawing);
   const checkIfAllSubmitted = useMutation(api.room.checkIfAllSubmitted);
+  const checkIfAllImagesMade = useQuery(api.room.checkIfAllImagesMade, {
+    code: gameCode,
+  });
   const playerID = usePlayerStore((state) => state.id);
+  const navigate = useNavigate();
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -39,6 +43,12 @@ const Draw: React.FC = () => {
     await checkIfAllSubmitted({ code: gameCode });
   };
 
+  useEffect(() => {
+    if (room?.state === "rating") {
+      navigate(`/vote/${gameCode}`);
+    }
+  }, [room?.state]);
+
   return (
     <div className="flex flex-row w-screen h-screen bg-black">
       <div className="flex bg-black flex-col w-[75%]">
@@ -58,13 +68,14 @@ const Draw: React.FC = () => {
           >
             Submit
           </button>
-
-          <button
-            onClick={startRoom}
-            className="font-poppins font-regular shadow-[inset_0_-2px_4px_rgba(0,0,0,0.6)] bg-green-500 w-[8vw] text-[14px] h-[3vw] rounded-xl text-black flex items-center justify-center"
-          >
-            Start
-          </button>
+          {room?.host === playerID && room?.state === "waiting" ? (
+            <button
+              onClick={startRoom}
+              className="font-poppins font-regular shadow-[inset_0_-2px_4px_rgba(0,0,0,0.6)] bg-green-500 w-[8vw] text-[14px] h-[3vw] rounded-xl text-black flex items-center justify-center"
+            >
+              Start
+            </button>
+          ) : null}
         </div>
         <div className="flex w-full h-[70vw]">
           <Replicate />
