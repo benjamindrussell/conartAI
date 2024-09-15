@@ -1,35 +1,41 @@
-import { FormEvent, useRef, useState } from "react";
-import { useAction } from "convex/react";
+import { useEffect, useRef, useState } from "react";
+import { useAction, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { ReactSketchCanvas, ReactSketchCanvasRef } from "react-sketch-canvas";
 import BackIcon from "./icons/BackIcon";
 import CrossIcon from "./icons/CrossIcon";
+import { usePlayerStore } from "../store.ts";
 
 export default function Replicate() {
   const callReplicate = useAction(api.replicate.callReplicate);
   const [imageUrl, setImageUrl] = useState("");
   const [prompt, setPrompt] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const playerID = usePlayerStore((state) => state.id);
   const canvasRef = useRef<ReactSketchCanvasRef | null>(null);
+  const player = useQuery(api.player.getPlayer, { playerId: playerID });
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    if (!prompt.trim() || !canvasRef.current) return;
-    setIsLoading(true);
-    try {
-      const image = await canvasRef.current.exportImage("png");
-      console.log(image);
-      const result = await callReplicate({
-        prompt: prompt.trim(),
-        scribble: image,
-      });
-      setImageUrl(result as unknown as string);
-    } catch (error) {
-      console.error("Error calling Replicate:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  useEffect(() => {
+    const makeImage = async () => {
+      if (!prompt.trim() || !canvasRef.current) return;
+      setIsLoading(true);
+      try {
+        const image = await canvasRef.current.exportImage("png");
+        console.log(image);
+        const result = await callReplicate({
+          prompt: prompt.trim(),
+          scribble: image,
+        });
+        setImageUrl(result as unknown as string);
+      } catch (error) {
+        console.error("Error calling Replicate:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    makeImage();
+  }, [player?.hasSubmitted]);
 
   const undo = () => {
     if (!canvasRef.current) return;
@@ -88,7 +94,7 @@ export default function Replicate() {
           )}
         </div>
       </div>
-      <form onSubmit={handleSubmit} className="w-full">
+      <form className="w-full">
         <button
           type="submit"
           disabled={isLoading || !prompt.trim()}

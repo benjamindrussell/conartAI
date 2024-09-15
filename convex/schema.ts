@@ -17,6 +17,7 @@ export default defineSchema({
     name: v.string(),
     hasSubmitted: v.boolean(),
     roomCode: v.string(),
+    imgUrl: v.string(),
     ratings: v.array(v.object({ playerId: v.string(), rating: v.number() })),
   }),
   messages: defineTable({
@@ -24,5 +25,5 @@ export default defineSchema({
     messengerId: v.string(),
     content: v.string(),
     roomCode: v.string(),
-  })
+  }),
 });

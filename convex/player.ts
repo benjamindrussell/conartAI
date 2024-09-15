@@ -12,6 +12,7 @@ export const joinRoom = mutation({
       roomCode: args.code,
       hasSubmitted: false,
       ratings: [],
+      imgUrl: "",
     });
     return playerId;
   },
@@ -70,6 +71,36 @@ export const ratePlayers = mutation({
 export const submitDrawing = mutation({
   args: {
     playerId: v.string(),
+    code: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const room = await ctx.db
+      .query("rooms")
+      .filter((q) => q.eq(q.field("code"), args.code))
+      .first();
+    if (!room) {
+      console.log("No room found");
+      return;
+    }
+    if (room.state !== "started") {
+      console.log("Room not started");
+      return;
+    }
+    const player = await ctx.db
+      .query("players")
+      .filter((q) => q.eq(q.field("_id"), args.playerId))
+      .first();
+    if (!player) {
+      console.log("no player found");
+      return;
+    }
+    await ctx.db.patch(player._id, { hasSubmitted: true });
+  },
+});
+
+export const getPlayer = query({
+  args: {
+    playerId: v.string(),
   },
   handler: async (ctx, args) => {
     const player = await ctx.db
@@ -80,6 +111,6 @@ export const submitDrawing = mutation({
       console.log("no player found");
       return;
     }
-    await ctx.db.patch(player._id, { hasSubmitted: true });
+    return player;
   },
 });

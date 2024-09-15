@@ -35,7 +35,7 @@ const Draw: React.FC = () => {
   };
 
   const finishDrawing = async () => {
-    await submitDrawing({ playerId: playerID });
+    await submitDrawing({ playerId: playerID, code: gameCode });
     await checkIfAllSubmitted({ code: gameCode });
   };
 
