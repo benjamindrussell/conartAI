@@ -94,7 +94,7 @@ export default function Replicate() {
           )}
         </div>
       </div>
-      <form onSubmit={handleSubmit} className="w-full">
+      <form className="w-full">
         <div className="gap-2">
           <input
             type="text"
