@@ -12,7 +12,6 @@ import "./index.css";
 import { ConvexProvider, ConvexReactClient } from "convex/react";
 import GameRoom from "./components/GameRoom.tsx";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import path from "path";
 
 const convex = new ConvexReactClient(import.meta.env.VITE_CONVEX_URL as string);
 const router = createBrowserRouter([
@@ -28,19 +27,17 @@ const router = createBrowserRouter([
     path: "/create",
     element: <CreateRoom />,
   },
-  { path: "/join",
-     element: <JoinRoom /> },
+  { path: "/join", element: <JoinRoom /> },
   {
     path: "/test",
     element: <App />,
-  },{
-    path: "/podium", 
-    element: <Podium /> 
   },
-  { path: "/draw/:gameCode",
-     element: <Draw /> },
-  { path: "/vote/:gameCode",
-     element: <Vote /> },
+  {
+    path: "/podium/:gameCode",
+    element: <Podium />,
+  },
+  { path: "/draw/:gameCode", element: <Draw /> },
+  { path: "/vote/:gameCode", element: <Vote /> },
 ]);
 
 createRoot(document.getElementById("root")!).render(

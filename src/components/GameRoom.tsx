@@ -44,7 +44,7 @@ const GameRoom = () => {
       <h2 className="text-xl font-semibold mb-2 text-center text-black">
         {room?.state}
       </h2>
-      {room?.host === playerID && room?.state === "waiting" && (
+      {room?.host === playerID && (
         <button
           onClick={() => startRoom()}
           className="px-4 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"

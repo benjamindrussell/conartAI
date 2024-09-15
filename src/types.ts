@@ -3,6 +3,11 @@ export type Player = {
   name: string;
   hasSubmitted: boolean;
   roomId: string;
+  imgUrl: string;
+  ratings: {
+    playerId: string;
+    rating: number;
+  };
 };
 
 type State = "waiting" | "started" | "rating" | "review";

@@ -54,7 +54,7 @@ const Draw: React.FC = () => {
       <div className="flex bg-black flex-col w-[75%]">
         <div className="flex justify-center md:justify-start md:w-full gap-5 py-5">
           <div className="md:block hidden">
-            <Logo ></Logo>
+            <Logo></Logo>
           </div>
           <div className="flex flex-row gap-2 justify-center items-center ml-[23vw] md:ml-[15vw]">
             <div className="w-[100px] md:w-[9vw] shadow-[inset_0_-2px_4px_rgba(0,0,0,0.6)] bg-[#191919] md:h-[3vw] h-[40px] rounded-xl">
@@ -71,12 +71,14 @@ const Draw: React.FC = () => {
               Submit
             </button>
 
-            <button
-              onClick={startRoom}
-              className="font-poppins hover:opacity-[60%] w-[100px] h-[40px] font-regular shadow-[inset_0_-2px_4px_rgba(0,0,0,0.6)] bg-green-500 w-[8vw] text-[14px] h-[3vw] rounded-xl text-black flex items-center justify-center"
-            >
-              Start
-            </button>
+            {room?.host === playerID && (
+              <button
+                onClick={startRoom}
+                className="font-poppins hover:opacity-[60%] w-[100px] h-[40px] font-regular shadow-[inset_0_-2px_4px_rgba(0,0,0,0.6)] bg-green-500 w-[8vw] text-[14px] h-[3vw] rounded-xl text-black flex items-center justify-center"
+              >
+                Start
+              </button>
+            )}
           </div>
         </div>
         <div className="flex w-full h-[70vw]">
@@ -85,10 +87,10 @@ const Draw: React.FC = () => {
         <div className="block md:hidden">
           <Chat />
         </div>
-            </div>
-            <div className="hidden md:block">
+      </div>
+      <div className="hidden md:block">
         <Chat />
-            </div>
+      </div>
       <div className="flex flex-col"></div>
     </div>
   );

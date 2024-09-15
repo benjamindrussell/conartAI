@@ -1,26 +1,88 @@
-import React from 'react';
-import Navbar from '../components/Navbar';
-const Podium: React.FC = () => {
-    return (
-        <div className='bg-black w-screen h-screen'>
-            <Navbar></Navbar>
-            <div className='w-screen h-screen flex flex-col justify-center gap-8 items-center'>
-                <div className='w-[700px] rounded-2xl h-[200px] bg-[#191919]'>
-                    <div className='w-full h-full flex items-end justify-end p-4'>
-                        <button className='w-[100px] h-[35px] font-poppins text-black rounded-2xl bg-white text-[13px] hover:opacity-[60%]'>Save Image</button>
-                    </div>
-                </div>
-                <div className='w-[600px] rounded-2xl h-[200px] bg-[#191919] flex flex-col justify-center items-center '>
-                    <div className='flex'>
-                    <div className="w-[450px] shadow-[inset_0_-2px_4px_rgba(0,0,0,0.6)] h-[50px] rounded-xl bg-[#303030] px-12 pb-5 pt-3 font-poppins font-regular">2 - Benjamin
-                        
-                    </div>
-                    
-                    </div>
-                </div>
+import { useQuery } from "convex/react";
+import React from "react";
+import { useParams } from "react-router";
+import { api } from "../../convex/_generated/api";
+
+interface Player {
+  _id: string;
+  name: string;
+  hasSubmitted: boolean;
+  roomCode: string;
+  imgUrl: string;
+  ratings: { playerId: string; rating: number }[];
+}
+
+const Podium: React.FC<{ players: Player[] }> = () => {
+  const { gameCode } = useParams<{ gameCode: string }>();
+  if (!gameCode) return null;
+  const players = useQuery(api.player.roomPlayers, { code: gameCode }) || [];
+  // Calculate average rating for each player
+  const playersWithAverageRating = players.map((player) => ({
+    ...player,
+    averageRating:
+      player.ratings.reduce((sum, r) => sum + r.rating, 0) /
+        player.ratings.length || 0,
+  }));
+
+  // Sort players by average rating and get top 3
+  const topPlayers = playersWithAverageRating
+    .sort((a, b) => b.averageRating - a.averageRating)
+    .slice(0, 3);
+
+  const getRankClass = (index: number) => {
+    switch (index) {
+      case 0:
+        return "order-2 w-48 h-48";
+      case 1:
+        return "order-1 w-40 h-40";
+      case 2:
+        return "order-3 w-32 h-32";
+      default:
+        return "";
+    }
+  };
+
+  const getPodiumHeight = (index: number) => {
+    switch (index) {
+      case 0:
+        return "h-40";
+      case 1:
+        return "h-36";
+      case 2:
+        return "h-32";
+      default:
+        return "";
+    }
+  };
+
+  return (
+    <div className="bg-gray-900 w-screen h-screen text-white font-poppins">
+      <div className="w-full h-full flex flex-col justify-center items-center">
+        <h1 className="text-4xl font-bold mb-10">Top 3 Players</h1>
+        <div className="flex items-end justify-center gap-4 mb-8">
+          {topPlayers.map((player, index) => (
+            <div key={player._id} className="flex flex-col items-center">
+              <img
+                src={player.imgUrl}
+                alt={player.name}
+                className={`rounded-t-lg mb-2 object-cover ${getRankClass(index)}`}
+              />
+              <div
+                className={`w-40 bg-gray-800 rounded-b-lg p-4 flex flex-col items-center ${getPodiumHeight(index)}`}
+              >
+                <span className="text-2xl font-bold mb-2">{index + 1}</span>
+                <span className="text-xl mb-2">{player.name}</span>
+                <span className="text-lg text-yellow-400">
+                  {player.averageRating.toFixed(2)}
+                </span>
+              </div>
             </div>
+          ))}
         </div>
-    );
+      </div>
+    </div>
+  );
 };
 
 export default Podium;
+
