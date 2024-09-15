@@ -8,7 +8,7 @@ const Vote: React.FC = () => {
                     <Logo></Logo>
                 </div>
 
-                <div className='flex w-full mt-[2vw]'>
+                <div className='flex w-full mt-[5vw]'>
                     <div className='w-[60vw] bg-[#2b2b2b] h-[40vw] ml-10 rounded-2xl'></div>
                 </div>
                 <div className='flex'>
