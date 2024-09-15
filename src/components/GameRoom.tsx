@@ -22,12 +22,7 @@ const GameRoom = () => {
     });
   };
 
-  const displayTime =
-    room?.state === "started"
-      ? room?.scribbleTime
-      : room?.state === "rating"
-        ? room?.ratingTime
-        : null;
+  const displayTime = room?.state === "started" ? room?.scribbleTime : null;
 
   const startRoom = async () => {
     await startGame({ code: gameCode });

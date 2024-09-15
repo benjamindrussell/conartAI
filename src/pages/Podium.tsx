@@ -1,18 +1,8 @@
 import { useQuery } from "convex/react";
-import React from "react";
 import { useParams } from "react-router";
 import { api } from "../../convex/_generated/api";
 
-interface Player {
-  _id: string;
-  name: string;
-  hasSubmitted: boolean;
-  roomCode: string;
-  imgUrl: string;
-  ratings: { playerId: string; rating: number }[];
-}
-
-const Podium: React.FC<{ players: Player[] }> = () => {
+const Podium = () => {
   const { gameCode } = useParams<{ gameCode: string }>();
   if (!gameCode) return null;
   const players = useQuery(api.player.roomPlayers, { code: gameCode }) || [];
@@ -85,4 +75,3 @@ const Podium: React.FC<{ players: Player[] }> = () => {
 };
 
 export default Podium;
-

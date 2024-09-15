@@ -15,13 +15,10 @@ const Draw: React.FC = () => {
   const startGame = useMutation(api.room.startRoomGame);
   const submitDrawing = useMutation(api.player.submitDrawing);
   const checkIfAllSubmitted = useMutation(api.room.checkIfAllSubmitted);
-  const checkIfAllImagesMade = useQuery(api.room.checkIfAllImagesMade, {
-    code: gameCode,
-  });
   const playerID = usePlayerStore((state) => state.id);
   const navigate = useNavigate();
   const players = useQuery(api.player.roomPlayers, {
-    code: gameCode
+    code: gameCode,
   });
 
   const formatTime = (seconds: number) => {
@@ -30,12 +27,7 @@ const Draw: React.FC = () => {
     return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
   };
 
-  const displayTime =
-    room?.state === "started"
-      ? room?.scribbleTime
-      : room?.state === "rating"
-        ? room?.ratingTime
-        : 0;
+  const displayTime = room?.state === "started" ? room?.scribbleTime : 0;
 
   const startRoom = async () => {
     await startGame({ code: gameCode });
@@ -48,7 +40,9 @@ const Draw: React.FC = () => {
 
   useEffect(() => {
     if (room?.state === "rating" && players) {
-      const allPlayersHaveImages = players.every(player => player.imageUrl && player.imageUrl !== "");
+      const allPlayersHaveImages = players.every(
+        (player) => player.imageUrl && player.imageUrl !== "",
+      );
       if (allPlayersHaveImages) {
         navigate(`/vote/${gameCode}`);
       }

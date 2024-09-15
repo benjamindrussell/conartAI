@@ -12,8 +12,7 @@ export const createRoom = mutation({
   handler: async (ctx, args) => {
     const roomId = await ctx.db.insert("rooms", {
       code: args.code,
-      scribbleTime: 90,
-      ratingTime: 60,
+      scribbleTime: 45,
       prompt: args.prompt,
       state: "waiting",
       host: args.playerID,
@@ -94,13 +93,6 @@ export const recursiveUpdateRoomTime = mutation({
 
     if (room.scribbleTime <= 0) {
       await ctx.db.patch(room._id, { state: "rating" });
-      await ctx.scheduler.runAfter(
-        1000,
-        api.room.recursiveUpdateRoomRatingTime,
-        {
-          code: args.code,
-        },
-      );
       console.log("Time is over");
       return;
     } else {
@@ -108,36 +100,6 @@ export const recursiveUpdateRoomTime = mutation({
       await ctx.scheduler.runAfter(1000, api.room.recursiveUpdateRoomTime, {
         code: args.code,
       });
-    }
-  },
-});
-
-export const recursiveUpdateRoomRatingTime = mutation({
-  args: {
-    code: v.string(),
-  },
-  handler: async (ctx, args) => {
-    const room = await ctx.db
-      .query("rooms")
-      .filter((q) => q.eq(q.field("code"), args.code))
-      .first();
-    if (!room) {
-      console.log("No room found");
-      return;
-    }
-    if (room.ratingTime <= 0) {
-      await ctx.db.patch(room._id, { state: "review" });
-      console.log("Time is over");
-      return;
-    } else {
-      await ctx.db.patch(room._id, { ratingTime: room.ratingTime - 1 });
-      await ctx.scheduler.runAfter(
-        1000,
-        api.room.recursiveUpdateRoomRatingTime,
-        {
-          code: args.code,
-        },
-      );
     }
   },
 });
@@ -171,13 +133,6 @@ export const checkIfAllSubmitted = mutation({
 
     if (submittedPlayers.length === players.length) {
       await ctx.db.patch(room._id, { state: "rating" });
-      await ctx.scheduler.runAfter(
-        1000,
-        api.room.recursiveUpdateRoomRatingTime,
-        {
-          code: args.code,
-        },
-      );
     }
   },
 });

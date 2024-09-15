@@ -5,13 +5,12 @@ import { ReactSketchCanvas, ReactSketchCanvasRef } from "react-sketch-canvas";
 import BackIcon from "./icons/BackIcon";
 import CrossIcon from "./icons/CrossIcon";
 import { usePlayerStore } from "../store.ts";
-import { updatePlayerImgUrl } from "../../convex/player.ts";
 
 export default function Replicate() {
   const callReplicate = useAction(api.replicate.callReplicate);
   const [imageUrl, setImageUrl] = useState("");
   const [prompt, setPrompt] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [_, setIsLoading] = useState(false);
   const playerID = usePlayerStore((state) => state.id);
   const canvasRef = useRef<ReactSketchCanvasRef | null>(null);
   const player = useQuery(api.player.getPlayer, { playerId: playerID });
@@ -29,10 +28,10 @@ export default function Replicate() {
           scribble: image,
         });
         console.log("result: ", result);
-        const url = (result as unknown as string[])[0]
+        const url = (result as unknown as string[])[0];
         updatePlayerImgUrl({
           playerId: playerID,
-          imageUrl: url
+          imageUrl: url,
         });
         setImageUrl(result as unknown as string);
       } catch (error) {

@@ -6,7 +6,6 @@ export default defineSchema({
     _id: v.string(),
     code: v.string(),
     scribbleTime: v.number(),
-    ratingTime: v.number(),
     prompt: v.string(),
     state: v.string(),
     host: v.string(),
