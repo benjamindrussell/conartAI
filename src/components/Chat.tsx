@@ -5,20 +5,18 @@ import { api } from "../../convex/_generated/api";
 import { usePlayerStore } from "../store.ts";
 
 export default function Chat() {
-  // TODO: don't hard code this
   let { gameCode } = useParams();
   if (!gameCode) return null;
 
-  const room = useQuery(api.room.getRoom, { code: gameCode });
   const players = useQuery(api.player.roomPlayers, { code: gameCode }) || [];
   const id = usePlayerStore((state) => state.id);
-  const ratePlayers = useMutation(api.player.ratePlayers);
-  const setRoomState = useMutation(api.room.setRoomState);
-  
+
   const [message, setMessage] = useState("");
   const uploadMessage = useMutation(api.chat.uploadMessage);
   const messages = useQuery(api.chat.getMessages, { code: gameCode }) || [];
-  
+
+  const playerID = usePlayerStore((state) => state.id);
+  const player = useQuery(api.player.getPlayer, { playerId: playerID });
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -46,7 +44,7 @@ export default function Chat() {
   };
 
   const getPlayerName = (messengerId: string) => {
-    const player = players.find(p => p._id === messengerId);
+    const player = players.find((p) => p._id === messengerId);
     console.log("player: ", player);
     return player ? player.name : "Unknown Player";
   };
@@ -58,23 +56,32 @@ export default function Chat() {
       </div>
       <div className="flex-grow overflow-y-auto mb-4 flex flex-col-reverse mx-4">
         <div ref={messagesEndRef} />
-        {messages.slice().reverse().map((msg, index) => (
-          <div 
-            key={index} 
-            className={`mb-2 p-2 rounded-lg ${
-              msg.messengerId === id ? "bg-teal-600 text-white self-end" : "bg-white text-black self-start"
-            }`}
-          >
-            <p className="text-xs font-bold">{getPlayerName(msg.messengerId)}</p>
-            <p>{msg.content}</p>
-          </div>
-        ))}
+        {messages
+          .slice()
+          .reverse()
+          .map((msg, index) => (
+            <div
+              key={index}
+              className={`mb-2 p-2 rounded-lg ${
+                msg.messengerId === id
+                  ? "bg-teal-600 text-white self-end"
+                  : "bg-white text-black self-start"
+              }`}
+            >
+              <p className="text-xs font-bold">
+                {getPlayerName(msg.messengerId)}
+              </p>
+              <p>{msg.content}</p>
+            </div>
+          ))}
       </div>
       <form onSubmit={handleSubmit} className="mt-auto mx-4 mb-4">
         <input
           type="text"
           value={message}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMessage(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setMessage(e.target.value)
+          }
           placeholder="Type your message..."
           className="w-full p-2 rounded-md"
         />
@@ -88,3 +95,4 @@ export default function Chat() {
     </div>
   );
 }
+
