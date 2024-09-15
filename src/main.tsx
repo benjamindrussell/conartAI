@@ -4,6 +4,8 @@ import App from "./App.tsx";
 import Index from "./pages/Index.tsx";
 import CreateRoom from "./pages/CreateRoom.tsx";
 import JoinRoom from "./pages/JoinRoom.tsx";
+import Draw from "./pages/Draw.tsx";
+import Vote from "./pages/Vote.tsx";
 import "./index.css";
 
 import { ConvexProvider, ConvexReactClient } from "convex/react";
@@ -23,11 +25,18 @@ const router = createBrowserRouter([
     path: "/create",
     element: <CreateRoom />,
   },
-  { path: "/join", element: <JoinRoom /> },
+  {path: "/join", 
+    element: <JoinRoom />},
   {
-    path: "/test",
+    path:"/test",
     element: <App />,
   },
+  { path: "/draw",
+    element: <Draw />,
+  },
+  {path: "/vote",
+    element: <Vote />},
+
 ]);
 
 createRoot(document.getElementById("root")!).render(
